@@ -1,34 +1,53 @@
 import React from "react";
-import { Text, View, Alert, Button, TextInput, StyleSheet, 
-  SafeAreaView, Dimensions } from "react-native";
+import { Text, View, Button, TextInput, StyleSheet, 
+  SafeAreaView, } from "react-native";
 
+  //Importa uma função utilizada pelo FireBase para criar um usuário com email e senha
+import {createUserWithEmailAndPassword} from 'firebase/auth'
 
+  //Importa um objteo de autenticação configurado no projeto "../src/services/firebase"
+import{auth} from "../src/services/firebase";
 
 export default function Index() {
   
-  const [text, onChangeText] = React.useState('')
+  //Criação de estados para armazenar emails e senhas
+  const [email, setEmail] = React.useState('')
+  const [password, setPassword] = React.useState('')
+  
+  // Criação de função assíncrona
+  async function cadastro() {
+    // Chama a função do FireBase para criar um novo usuario e senha
+    await createUserWithEmailAndPassword(auth, email, password)
+  };
 
   return (
     <SafeAreaView style={styles.contentContainerStyle}>
       <View style={styles.container}>
-        <Text style={styles.title}>Cadastro de nome</Text>
+        <Text style={styles.title}>Login de Usuário</Text>
       </View>
 
       <View>
       <TextInput
             style={styles.input}
-            onChangeText={onChangeText}
-            value={text}
-            placeholder="Digite seu nome"
+            onChangeText={setEmail}
+            value={email}
+            placeholder="Digite seu email"
             keyboardType="default"
             />
+      <TextInput
+        style={styles.input}
+        onChangeText={setPassword}
+        value={password}
+        placeholder="Digite sua senha"
+        keyboardType="default"
+      />
       </View >
       
         <View style={styles.container}>
         <Button
             title="cadastrar"
             color="#49708a"
-            onPress={()=> Alert.alert('Nome Cadastrado')}
+            onPress={()=> cadastro()}
             />
       </View>
     </SafeAreaView>
@@ -55,5 +74,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10, // Adiciona padding horizontal dentro do TextInput
+    margin: 10
   },
 })
